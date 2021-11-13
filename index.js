@@ -53,6 +53,7 @@ async function run() {
             const watches = await cursor.toArray();
             res.json(watches);
         });
+
         app.get('/watches/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: ObjectId(id) };
@@ -61,16 +62,7 @@ async function run() {
         });
 
 
-        app.get('/watches/home', async (req, res) => {
-            const cursor = watchCollection.find().limit(6);
-            const watches = await cursor.toArray();
-            res.json(watches);
-        });
-        // app.get('/products', verifyToken, async (req, res) => {           
-        //     const cursor = watchCollection.find();
-        //     const appointments = await cursor.toArray();
-        //     res.json(appointments);
-        // });
+
 
         app.post('/products', async (req, res) => {
             const appointment = req.body;
