@@ -4,6 +4,7 @@ require('dotenv').config();
 const app = express()
 const port = process.env.PORT || 5000
 const { MongoClient } = require('mongodb');
+const ObjectId = require('mongodb').ObjectId;
 const admin = require("firebase-admin");
 
 app.use(cors());
@@ -52,6 +53,12 @@ async function run() {
             const watches = await cursor.toArray();
             res.json(watches);
         });
+        app.get('/watches/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await watchCollection.findOne(query);
+            res.json(result);
+        });
 
 
         app.get('/watches/home', async (req, res) => {
@@ -71,11 +78,24 @@ async function run() {
             res.json(result)
         });
 
+
+
         app.post('/orders', async (req, res) => {
             const order = req.body;
             const result = await orderCollection.insertOne(order);
             res.json(result);
         });
+        app.get('/orders', async (req, res) => {
+            const cursor = orderCollection.find({});
+            const orders = await cursor.toArray();
+            res.json(orders);
+        });
+        app.delete('/orders/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await orderCollection.deleteOne(query);
+            res.json(result);
+        })
 
         app.get('/users/:email', async (req, res) => {
             const email = req.params.email;
